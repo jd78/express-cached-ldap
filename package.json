@@ -1,0 +1,23 @@
+{
+  "name": "express-cached-ldap",
+  "version": "1.0.0",
+  "description": "Cached LDAP authentication middleware for express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jd78/express-cached-ldap.git"
+  },
+  "author": "Gennaro Del Sorbo <gennaro.delsorbo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jd78/express-cached-ldap/issues"
+  },
+  "homepage": "https://github.com/jd78/express-cached-ldap",
+  "dependencies": {
+    "node-cache": "^3.0.0",
+    "q": "^1.4.1"
+  }
+}
