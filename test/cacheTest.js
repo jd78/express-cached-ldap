@@ -3,26 +3,17 @@ require("should");
 
 describe("Cachemanager", function(){
     it("Throw expection if cache not instantiated", function(){
-        var exceptions = 0;
-        try {
+        (function(){
             cache.get("test");
-        } catch(ex){
-            exceptions++;
-        }
+        }).should.throw();
         
-        try {
+        (function(){
             cache.remove("test");
-        } catch(ex){
-            exceptions++;
-        }
+        }).should.throw();
         
-        try {
+        (function(){
             cache.set("test", "test");
-        } catch(ex){
-            exceptions++;
-        }
-        
-        exceptions.should.be.exactly(3);
+        }).should.throw();
     });
     
     it("set", function(){
@@ -39,8 +30,8 @@ describe("Cachemanager", function(){
     it("remove", function(){
        cache.remove("test");
        
-       cache.get("test").then(function(val){
-          (val === null).should.be.exactly(true); 
+       return cache.get("test").then(function(val){
+          (val === null).should.be.true();
        });
     });
 });
