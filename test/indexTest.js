@@ -1,9 +1,18 @@
 var index = require("../lib/index");
 var sinon = require("sinon");
+var ldap = require("../lib/ldap");
 require("should");
 
 
 describe("Index", function(){
+    
+    var config = {
+                    ldapUrl: 'ldap://test.domain.com',
+                    baseDN: 'dc=domain,dc=com',
+                    ldapUsername: 'test',
+                    ldapPassword: 'test'
+                };
+    
     describe("Validate configuration", function(){
         it("if configuration not provided, throw exception", function(){
             index.should.throw("Configuration not provided");
@@ -45,12 +54,7 @@ describe("Index", function(){
         it("if ttl not provided, chose the default value", function(){
             var cache = require("../lib/cache");
             var spy = sinon.spy(cache, "initialize");
-            index({
-                ldapUrl: 'ldap://test.domain.com',
-                baseDN: 'dc=domain,dc=com',
-                ldapUsername: 'test',
-                ldapPassword: 'test'
-            });
+            index(config);
             spy.calledWith(600).should.be.true();
         });
    }); 
@@ -59,12 +63,7 @@ describe("Index", function(){
        
        it("if connection is undefined, throw exception", function(){
        
-           var middleware = index({
-                ldapUrl: 'ldap://test.domain.com',
-                baseDN: 'dc=domain,dc=com',
-                ldapUsername: 'test',
-                ldapPassword: 'test'
-            });
+           var middleware = index(config);
             
             (function(){
                 middleware({});    
@@ -73,16 +72,19 @@ describe("Index", function(){
        
        it("if ntlm is undefined, throw exception", function(){
        
-           var middleware = index({
-                ldapUrl: 'ldap://test.domain.com',
-                baseDN: 'dc=domain,dc=com',
-                ldapUsername: 'test',
-                ldapPassword: 'test'
-            });
+           var middleware = index(config);
             
             (function(){
                 middleware({connection:{}});    
             }).should.throw("The request does not contain NTLM info. Please install express-ntlm first and include it as express middleware");
+       });
+   });
+   
+   describe("LdapService", function() {
+       it("ldap initialized correctly", function(){
+           var spy = sinon.spy(ldap, "initialize");
+           index(config)({connection:{ ntlm: { UserName: 'test' }}});
+           spy.calledWith(config).should.be.true();
        });
    });
 });
