@@ -28,7 +28,7 @@ describe("LdapService", function(){
     });
     
     var returnUser = {
-        dn: 'CN=Surname\\, Name,OU=Group 1,OU=Group 2, OU=Group3, DC=test,DC=com'
+        dn: 'CN=Surname\\, Name,OU=Group 1,OU=Group 2,OU=Group 3,DC=test,DC=com'
     };
     
     it("if the user isn't in cache, cache it afrer the find", function(){
@@ -76,6 +76,32 @@ describe("LdapService", function(){
         });
         
         return new LdapService(ad).isAuthorized("test").then(function(isAuthorized){
+            setCacheStub.withArgs("test", true).calledOnce.should.be.true();
+            isAuthorized.should.be.true();
+            findUserStub.restore();
+        });
+    });
+    
+    it("if user is not in the given group, user is not authorized", function(){
+        getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
+        var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
+            callback(undefined, returnUser);
+        });
+        
+        return new LdapService(ad, "Group 4").isAuthorized("test").then(function(isAuthorized){
+            setCacheStub.withArgs("test", false).calledOnce.should.be.true();
+            isAuthorized.should.be.false();
+            findUserStub.restore();
+        });
+    });
+    
+    it("if user is in the given group, user is authorized", function(){
+        getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
+        var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
+            callback(undefined, returnUser);
+        });
+        
+        return new LdapService(ad, "Group 3").isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
             findUserStub.restore();
