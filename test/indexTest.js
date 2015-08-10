@@ -79,12 +79,4 @@ describe("Index", function(){
             }).should.throw("The request does not contain NTLM info. Please install express-ntlm first and include it as express middleware");
        });
    });
-   
-   describe("LdapService", function() {
-       it("ldap initialized correctly", function(){
-           var spy = sinon.spy(ldap, "initialize");
-           index(config)({connection:{ ntlm: { UserName: 'test' }}});
-           spy.calledWith(config).should.be.true();
-       });
-   });
 });
