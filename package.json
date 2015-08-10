@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/jd78/express-cached-ldap",
   "dependencies": {
+    "activedirectory": "^0.7.0",
     "node-cache": "^3.0.0",
     "q": "^1.4.1"
   },
