@@ -33,18 +33,18 @@ describe("LdapService", function(){
     
     it("if the user isn't in cache, cache it afrer the find", function(){
         getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
-         var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
-             callback(null, returnUser);
-         });
+        var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
+            callback(undefined, returnUser);
+        });
         
         return new LdapService(ad).isAuthorized("test").then(function(){
-            setCacheStub.withArgs("test", returnUser).calledOnce.should.be.true();
+            setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             
             findUserStub.restore();
         });
     });
     
-    it("if the user is in cache, return the cached user without calling the find", function(){
+    it("if the user is in cache, return the cached auth without calling the find", function(){
         getCacheStub.returns(q.promise(function(resolve){ resolve(returnUser); }));
         var findUserStub = sinon.stub(ad, "findUser");
         
@@ -52,6 +52,32 @@ describe("LdapService", function(){
             setCacheStub.called.should.be.false();
             findUserStub.called.should.be.false();
             
+            findUserStub.restore();
+        });
+    });
+    
+    it("if user not found, user is not authorized", function(){
+        getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
+        var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
+            callback(undefined, undefined);
+        });
+        
+        return new LdapService(ad).isAuthorized("test").then(function(isAuthorized){
+            setCacheStub.withArgs("test", false).calledOnce.should.be.true();
+            isAuthorized.should.be.false();
+            findUserStub.restore();
+        });
+    });
+    
+    it("if user found, user is authorized", function(){
+        getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
+        var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
+            callback(undefined, returnUser);
+        });
+        
+        return new LdapService(ad).isAuthorized("test").then(function(isAuthorized){
+            setCacheStub.withArgs("test", true).calledOnce.should.be.true();
+            isAuthorized.should.be.true();
             findUserStub.restore();
         });
     });
