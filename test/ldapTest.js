@@ -43,4 +43,16 @@ describe("LdapService", function(){
             findUserStub.restore();
         });
     });
-})
+    
+    it("if the user is in cache, return the cached user without calling the find", function(){
+        getCacheStub.returns(q.promise(function(resolve){ resolve(returnUser); }));
+        var findUserStub = sinon.stub(ad, "findUser");
+        
+        return new LdapService(ad).isAuthorized("test").then(function(){
+            setCacheStub.called.should.be.false();
+            findUserStub.called.should.be.false();
+            
+            findUserStub.restore();
+        });
+    });
+});
