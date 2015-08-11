@@ -107,4 +107,30 @@ describe("LdapService", function(){
             findUserStub.restore();
         });
     });
+    
+    it("if user is in the given groups, user is authorized", function(){
+        getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
+        var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
+            callback(undefined, returnUser);
+        });
+        
+        return new LdapService(ad, "Group 1,Group 3").isAuthorized("test").then(function(isAuthorized){
+            setCacheStub.withArgs("test", true).calledOnce.should.be.true();
+            isAuthorized.should.be.true();
+            findUserStub.restore();
+        });
+    });
+    
+    it("if user is not in the given groups, user is not authorized", function(){
+        getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
+        var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
+            callback(undefined, returnUser);
+        });
+        
+        return new LdapService(ad, "Group 1,Group 4").isAuthorized("test").then(function(isAuthorized){
+            setCacheStub.withArgs("test", false).calledOnce.should.be.true();
+            isAuthorized.should.be.false();
+            findUserStub.restore();
+        });
+    });
 });
