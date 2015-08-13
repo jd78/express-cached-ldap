@@ -89,7 +89,7 @@ describe("LdapService", function(){
         });
         
         var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
-            callback(undefined, ["Group 1"]);
+            callback(undefined, [{cn: "Group 1"}]);
         });
         
         return new LdapService(ad, ["Group 4"]).isAuthorized("test").then(function(isAuthorized){
@@ -107,7 +107,7 @@ describe("LdapService", function(){
         });
         
         var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
-            callback(undefined, ["Group 1", "Group 3"]);
+            callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}]);
         });
         
         return new LdapService(ad, ["Group 3"]).isAuthorized("test").then(function(isAuthorized){
@@ -125,7 +125,7 @@ describe("LdapService", function(){
         });
         
         var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
-            callback(undefined, ["Group 1", "Group 3", "Group 4"]);
+            callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}, {cn: "Group 4"}]);
         });
         
         return new LdapService(ad, ["Group 1", "Group 3"]).isAuthorized("test").then(function(isAuthorized){
@@ -143,7 +143,7 @@ describe("LdapService", function(){
         });
         
         var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
-            callback(undefined, ["Group 1", "Group 3"]);
+            callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}]);
         });
         
         return new LdapService(ad, ["Group 1" ,"Group 4"]).isAuthorized("test").then(function(isAuthorized){
