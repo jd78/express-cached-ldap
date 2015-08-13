@@ -88,10 +88,15 @@ describe("LdapService", function(){
             callback(undefined, returnUser);
         });
         
-        return new LdapService(ad, "Group 4").isAuthorized("test").then(function(isAuthorized){
+        var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
+            callback(undefined, ["Group 1"]);
+        });
+        
+        return new LdapService(ad, ["Group 4"]).isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", false).calledOnce.should.be.true();
             isAuthorized.should.be.false();
             findUserStub.restore();
+            findGroupsStub.restore();
         });
     });
     
@@ -101,10 +106,15 @@ describe("LdapService", function(){
             callback(undefined, returnUser);
         });
         
-        return new LdapService(ad, "Group 3").isAuthorized("test").then(function(isAuthorized){
+        var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
+            callback(undefined, ["Group 1", "Group 3"]);
+        });
+        
+        return new LdapService(ad, ["Group 3"]).isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
             findUserStub.restore();
+            findGroupsStub.restore();
         });
     });
     
@@ -114,10 +124,15 @@ describe("LdapService", function(){
             callback(undefined, returnUser);
         });
         
-        return new LdapService(ad, "Group 1,Group 3").isAuthorized("test").then(function(isAuthorized){
+        var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
+            callback(undefined, ["Group 1", "Group 3", "Group 4"]);
+        });
+        
+        return new LdapService(ad, ["Group 1", "Group 3"]).isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
             findUserStub.restore();
+            findGroupsStub.restore();
         });
     });
     
@@ -127,10 +142,15 @@ describe("LdapService", function(){
             callback(undefined, returnUser);
         });
         
-        return new LdapService(ad, "Group 1,Group 4").isAuthorized("test").then(function(isAuthorized){
+        var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
+            callback(undefined, ["Group 1", "Group 3"]);
+        });
+        
+        return new LdapService(ad, ["Group 1" ,"Group 4"]).isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", false).calledOnce.should.be.true();
             isAuthorized.should.be.false();
             findUserStub.restore();
+            findGroupsStub.restore();
         });
     });
 });
