@@ -55,7 +55,7 @@ describe("Index", function(){
             var cache = require("../lib/cache");
             var spy = sinon.spy(cache, "initialize");
             index(config);
-            spy.calledWith(600).should.be.true();
+            spy.calledWith(1800).should.be.true();
         });
    }); 
    
