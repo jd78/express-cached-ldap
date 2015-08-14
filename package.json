@@ -12,6 +12,17 @@
   "bugs": {
     "url": "https://github.com/jd78/express-cached-ldap/issues"
   },
+  "files": [
+    "index.js",
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "ldap",
+    "active directory",
+    "authentication"
+  ],
   "homepage": "https://github.com/jd78/express-cached-ldap",
   "dependencies": {
     "activedirectory": "^0.7.0",
