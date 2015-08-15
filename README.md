@@ -5,7 +5,7 @@ Express-Cached-LDAP is an Active Directory authentication middleware for Express
 Express-Cached-LDAP depends strictly on express-ntlm (https://www.npmjs.com/package/express-ntlm) and activedirectory (https://www.npmjs.com/package/activedirectory).
 
 ## Installation
-    $ npm install express-cached-ldap
+    $ npm install express-cached-ldap --no-optional
     
 # Usage
 
