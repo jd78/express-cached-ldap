@@ -1,6 +1,6 @@
 {
   "name": "express-cached-ldap",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Cached LDAP authentication middleware for express",
   "main": "index.js",
   "repository": {
