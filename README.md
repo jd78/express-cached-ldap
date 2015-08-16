@@ -1,8 +1,9 @@
 Express-Cached-LDAP
 ========================
 
-Express-Cached-LDAP is an Active Directory authentication middleware for Express.js. It supports both user and groups authentication. The middleware caches the user authentication so that it queries Active Directory just once per user (until the cache expires).
-Express-Cached-LDAP depends strictly on express-ntlm (https://www.npmjs.com/package/express-ntlm) and activedirectory (https://www.npmjs.com/package/activedirectory).
+Express-Cached-LDAP is an Active Directory authentication middleware for Express.js. It supports both users and groups authentication. 
+The middleware caches the user authentication so that it queries Active Directory just once per user (until the cache expires).
+Express-Cached-LDAP depends strictly on express-ntlm, activedirectory and node-cache packages.
 
 ## Installation
     $ npm install express-cached-ldap --no-optional
@@ -37,7 +38,8 @@ app.use(ldap({
 The basic configuration requires ldapUrl, baseDN, ldapUsername and ldapPassword.
 There are two additional parameter that can be added:
 - groups, array of strings that check if the users is in the given groups;
-- ttl, cache expiration in seconds, the default is 1800 (30 min).
+- ttl, cache expiration in seconds, the default is 1800 (30 min). Pass 0 for unlimited;
+- cacheCheckPeriod, delete cache check interval in seconds, the default is 600 (10 min). Pass 0 for no check;
 
 ```js
 app.use(ldap({
@@ -46,7 +48,8 @@ app.use(ldap({
   ldapUsername: 'adUsername',
   ldapPassword: 'adPassword',
   groups: ['Group Test 1', 'Group Test 2'],
-  ttl: 36000
+  ttl: 36000,
+  cacheCheckPeriod: 1000
 }));
 ```
 

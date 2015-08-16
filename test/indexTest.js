@@ -56,6 +56,45 @@ describe("Index", function(){
             var spy = sinon.spy(cache, "initialize");
             index(config);
             spy.calledWith(1800).should.be.true();
+            spy.restore();
+        });
+        
+        it("if ttl provided, assign it", function(){
+            var ttlConfig = {
+                    ldapUrl: 'ldap://test.domain.com',
+                    baseDN: 'dc=domain,dc=com',
+                    ldapUsername: 'test',
+                    ldapPassword: 'test',
+                    ttl: 600
+                };
+            var cache = require("../lib/cache");
+            var spy = sinon.spy(cache, "initialize");
+            index(ttlConfig);
+            spy.calledWith(600).should.be.true();
+            spy.restore();
+        });
+        
+        it("if cacheCheckPeriod not provided, chose the default value", function(){
+            var cache = require("../lib/cache");
+            var spy = sinon.spy(cache, "initialize");
+            index(config);
+            spy.calledWith(1800, 600).should.be.true();
+            spy.restore();
+        });
+        
+        it("if cacheCheckPeriod provided, assign it", function(){
+            var checkPeriodConfig = {
+                    ldapUrl: 'ldap://test.domain.com',
+                    baseDN: 'dc=domain,dc=com',
+                    ldapUsername: 'test',
+                    ldapPassword: 'test',
+                    cacheCheckPeriod: 1800
+                };
+            var cache = require("../lib/cache");
+            var spy = sinon.spy(cache, "initialize");
+            index(checkPeriodConfig);
+            spy.calledWith(1800, 1800).should.be.true();
+            spy.restore();
         });
    }); 
    
