@@ -39,7 +39,7 @@ The basic configuration requires ldapUrl, baseDN, ldapUsername and ldapPassword.
 There are two additional parameter that can be added:
 - groups, array of strings that check if the users is in the given groups;
 - ttl, cache expiration in seconds, the default is 1800 (30 min). Pass 0 for unlimited;
-- cacheCheckPeriod, delete cache check interval in seconds, the default is 600 (10 min). Pass 0 for no check;
+- cacheCheckPeriod, delete cache check interval in seconds, the default is 600 (10 min). Pass 0 for no check.
 
 ```js
 app.use(ldap({
