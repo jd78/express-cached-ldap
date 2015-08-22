@@ -33,13 +33,16 @@ app.use(ldap({
 }));
 ```
 
+If the user is not authorized, a response status 401 will be sent or an error page will be rendered (see configuration).
+
 ## Configuration
 
 The configuration requires ldapUrl, baseDN, ldapUsername and ldapPassword.
-There are some additional parameters that can be added:
+There are some optional parameters that can be added:
 - groups, array of strings that check if the users is in the given groups;
 - ttl, cache expiration in seconds, the default is 1800 (30 min). Pass 0 for unlimited;
 - cacheCheckPeriod, delete cache check interval in seconds, the default is 600 (10 min). Pass 0 for no check.
+- unauthorizedView, renders the specified view instead of send back a 401 error status.
 
 ```js
 app.use(ldap({
@@ -49,8 +52,17 @@ app.use(ldap({
   ldapPassword: 'adPassword',
   groups: ['Group Test 1', 'Group Test 2'],
   ttl: 36000,
-  cacheCheckPeriod: 1000
+  cacheCheckPeriod: 1000,
+  unauthorizedView: 'unauthorized'
 }));
 ```
 
-If the user is not authenticated, a response status 401 will be sent.
+## Authorize single API
+
+app.use(ldap({...})) filters all the traffic and checks the user authorization. 
+Instead to filter all traffic you might want to filter just some API.
+To do that you need to create your own ldapModule and inject the middleware into the single APIs.
+
+```js
+
+```
