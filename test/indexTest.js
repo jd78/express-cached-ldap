@@ -7,11 +7,11 @@ require("should");
 describe("Index", function(){
     
     var config = {
-                    ldapUrl: 'ldap://test.domain.com',
-                    baseDN: 'dc=domain,dc=com',
-                    ldapUsername: 'test',
-                    ldapPassword: 'test'
-                };
+        ldapUrl: 'ldap://test.domain.com',
+        baseDN: 'dc=domain,dc=com',
+        ldapUsername: 'test',
+        ldapPassword: 'test'
+    };
     
     describe("Validate configuration", function(){
         it("if configuration not provided, throw exception", function(){
