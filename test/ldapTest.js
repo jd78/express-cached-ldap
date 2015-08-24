@@ -1,6 +1,6 @@
 var ActiveDirectory = require("activedirectory");
 var cache = require("../lib/cache");
-var LdapService = require("../lib/ldap");
+var ldapService = require("../lib/ldap");
 var sinon = require("sinon");
 var q = require("q");
 require("should");
@@ -37,7 +37,8 @@ describe("LdapService", function(){
             callback(undefined, returnUser);
         });
         
-        return new LdapService(ad).isAuthorized("test").then(function(){
+        ldapService.initialize(ad);
+        return ldapService.isAuthorized("test").then(function(){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             
             findUserStub.restore();
@@ -48,7 +49,8 @@ describe("LdapService", function(){
         getCacheStub.returns(q.promise(function(resolve){ resolve(returnUser); }));
         var findUserStub = sinon.stub(ad, "findUser");
         
-        return new LdapService(ad).isAuthorized("test").then(function(){
+        ldapService.initialize(ad);
+        return ldapService.isAuthorized("test").then(function(){
             setCacheStub.called.should.be.false();
             findUserStub.called.should.be.false();
             
@@ -62,7 +64,8 @@ describe("LdapService", function(){
             callback(undefined, undefined);
         });
         
-        return new LdapService(ad).isAuthorized("test").then(function(isAuthorized){
+        ldapService.initialize(ad);
+        return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", false).calledOnce.should.be.true();
             isAuthorized.should.be.false();
             findUserStub.restore();
@@ -75,7 +78,8 @@ describe("LdapService", function(){
             callback(undefined, returnUser);
         });
         
-        return new LdapService(ad).isAuthorized("test").then(function(isAuthorized){
+        ldapService.initialize(ad);
+        return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
             findUserStub.restore();
@@ -92,7 +96,8 @@ describe("LdapService", function(){
             callback(undefined, [{cn: "Group 1"}]);
         });
         
-        return new LdapService(ad, ["Group 4"]).isAuthorized("test").then(function(isAuthorized){
+        ldapService.initialize(ad, ["Group 4"]);
+        return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", false).calledOnce.should.be.true();
             isAuthorized.should.be.false();
             findUserStub.restore();
@@ -110,7 +115,8 @@ describe("LdapService", function(){
             callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}]);
         });
         
-        return new LdapService(ad, ["Group 3"]).isAuthorized("test").then(function(isAuthorized){
+        ldapService.initialize(ad, ["Group 3"]);
+        return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
             findUserStub.restore();
@@ -128,7 +134,8 @@ describe("LdapService", function(){
             callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}, {cn: "Group 4"}]);
         });
         
-        return new LdapService(ad, ["Group 1", "Group 3"]).isAuthorized("test").then(function(isAuthorized){
+        ldapService.initialize(ad, ["Group 1", "Group 3"]);
+        return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
             findUserStub.restore();
@@ -146,7 +153,8 @@ describe("LdapService", function(){
             callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}]);
         });
         
-        return new LdapService(ad, ["Group 1" ,"Group 4"]).isAuthorized("test").then(function(isAuthorized){
+        ldapService.initialize(ad, ["Group 1" ,"Group 4"]);
+        return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", false).calledOnce.should.be.true();
             isAuthorized.should.be.false();
             findUserStub.restore();
