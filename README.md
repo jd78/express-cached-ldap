@@ -42,7 +42,7 @@ There are some optional parameters that can be added:
 - groups, array of strings that check if the users is in the given groups;
 - ttl, cache expiration in seconds, the default is 1800 (30 min). Pass 0 for unlimited;
 - cacheCheckPeriod, delete cache check interval in seconds, the default is 600 (10 min). Pass 0 for no check.
-- unauthorizedView, renders the specified view instead of send back a 401 error status.
+- unauthorizedView, renders the specified view instead of send back a 401 error status. The view should be placed into the views folder.
 
 ```js
 app.use(ldap({
@@ -60,9 +60,35 @@ app.use(ldap({
 ## Authorize single API
 
 app.use(ldap({...})) filters all the traffic and checks the user authorization. 
-Instead to filter all traffic you might want to filter just some API.
+Instead to filter all traffic, you might want to filter only some APIs.
 To do that you need to create your own ldapModule and inject the middleware into the single APIs.
 
+Create a new file authorizationMiddleware.js:
+
 ```js
+var ldap = require('express-cached-ldap');
+
+module.exports = ldap({
+  ldapUrl: 'ldap://yourDomain.domain.com',
+  baseDN: 'dc=domain,dc=com',
+  ldapUsername: 'adUsername',
+  ldapPassword: 'adPassword',
+  groups: ['Group Test 1', 'Group Test 2']
+});
+
+```
+
+Remove the app.use(ldap({...})) from the app.js file and inject the middleware into the single API:
+
+```js
+var express = require('express');
+var router = express.Router();
+var authorizationMiddleware = require('yourAuthrizationMiddlewarePath/authorizationMiddleware');
+
+router.get('/', authorizationMiddleware, function(req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+
+module.exports = router;
 
 ```
