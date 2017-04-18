@@ -40,6 +40,7 @@ If the user is not authorized, a response status 401 will be sent or an error pa
 The configuration requires ldapUrl, baseDN, ldapUsername and ldapPassword.
 There are some optional parameters that can be added:
 - groups, array of strings that check if the users is in the given groups;
+- userToBePartOfAllGroups, default true; if true the user must be part of all the groups passed in the groups parameter; if false, the user is authorized if part of one or more groups;
 - ttl, cache expiration in seconds, the default is 1800 (30 min). Pass 0 for unlimited;
 - cacheCheckPeriod, delete cache check interval in seconds, the default is 600 (10 min). Pass 0 for no check.
 - unauthorizedView, renders the specified view instead of send back a 401 error status. The view should be placed into the views folder.
