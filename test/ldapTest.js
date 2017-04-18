@@ -96,7 +96,7 @@ describe("LdapService", function(){
             callback(undefined, [{cn: "Group 1"}]);
         });
         
-        ldapService.initialize(ad, ["Group 4"]);
+        ldapService.initialize(ad, ["Group 4"], true);
         return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", false).calledOnce.should.be.true();
             isAuthorized.should.be.false();
@@ -115,7 +115,7 @@ describe("LdapService", function(){
             callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}]);
         });
         
-        ldapService.initialize(ad, ["Group 3"]);
+        ldapService.initialize(ad, ["Group 3"], true);
         return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
@@ -134,7 +134,7 @@ describe("LdapService", function(){
             callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}, {cn: "Group 4"}]);
         });
         
-        ldapService.initialize(ad, ["Group 1", "Group 3"]);
+        ldapService.initialize(ad, ["Group 1", "Group 3"], true);
         return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
@@ -143,7 +143,7 @@ describe("LdapService", function(){
         });
     });
     
-    it("if user is not in the given groups, user is not authorized", function(){
+    it("userToBePartOfAllGroups=true - if user is not in the given groups, user is not authorized", function(){
         getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
         var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
             callback(undefined, returnUser);
@@ -153,10 +153,29 @@ describe("LdapService", function(){
             callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}]);
         });
         
-        ldapService.initialize(ad, ["Group 1" ,"Group 4"]);
+        ldapService.initialize(ad, ["Group 1" ,"Group 4"], true);
         return ldapService.isAuthorized("test").then(function(isAuthorized){
             setCacheStub.withArgs("test", false).calledOnce.should.be.true();
             isAuthorized.should.be.false();
+            findUserStub.restore();
+            findGroupsStub.restore();
+        });
+    });
+
+    it("userToBePartOfAllGroups=false - if user is not in all group but in one or more, user is authorized", function(){
+        getCacheStub.returns(q.promise(function(resolve){ resolve(null); }));
+        var findUserStub = sinon.stub(ad, "findUser", function(user, callback){
+            callback(undefined, returnUser);
+        });
+        
+        var findGroupsStub = sinon.stub(ad, "getGroupMembershipForUser", function(user, callback){
+            callback(undefined, [{cn: "Group 1"}, {cn: "Group 3"}]);
+        });
+        
+        ldapService.initialize(ad, ["Group 1" ,"Group 4"], false);
+        return ldapService.isAuthorized("test").then(function(isAuthorized){
+            setCacheStub.withArgs("test", false).calledOnce.should.be.true();
+            isAuthorized.should.be.true();
             findUserStub.restore();
             findGroupsStub.restore();
         });
