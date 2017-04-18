@@ -174,7 +174,7 @@ describe("LdapService", function(){
         
         ldapService.initialize(ad, ["Group 1" ,"Group 4"], false);
         return ldapService.isAuthorized("test").then(function(isAuthorized){
-            setCacheStub.withArgs("test", false).calledOnce.should.be.true();
+            setCacheStub.withArgs("test", true).calledOnce.should.be.true();
             isAuthorized.should.be.true();
             findUserStub.restore();
             findGroupsStub.restore();

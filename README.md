@@ -50,10 +50,11 @@ app.use(ldap({
   baseDN: 'dc=domain,dc=com',
   ldapUsername: 'adUsername',
   ldapPassword: 'adPassword',
-  groups: ['Group Test 1', 'Group Test 2'],
-  ttl: 36000,
-  cacheCheckPeriod: 1000,
-  unauthorizedView: 'unauthorized'
+  groups: ['Group Test 1', 'Group Test 2'], //optional
+  userToBePartOfAllGroups: true, //optional
+  ttl: 36000, //optional
+  cacheCheckPeriod: 1000, //optional
+  unauthorizedView: 'unauthorized' //optional
 }));
 ```
 
